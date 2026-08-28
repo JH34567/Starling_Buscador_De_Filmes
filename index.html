@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Starling — Filmes</title>
+  <meta
+    name="description"
+    content="Starling — explore filmes, pesquise títulos e monte sua coleção de favoritos."
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="bg-glow glow-one"></div>
+  <div class="bg-glow glow-two"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+
+      <div>
+        <strong>STARLING</strong>
+        <span>FILM DISCOVERY</span>
+      </div>
+    </div>
+
+    <button
+      class="ghost-button"
+      id="favoritesButton"
+      type="button"
+      aria-label="Abrir favoritos"
+    >
+      ♥ Favoritos
+      <b id="favoriteCount">0</b>
+    </button>
+  </header>
+
+  <main>
+
+    <section class="hero">
+
+      <div class="eyebrow">SUA PRÓXIMA HISTÓRIA COMEÇA AQUI</div>
+
+      <h1>
+        Encontre seu próximo
+        <em>filme favorito.</em>
+      </h1>
+
+      <p>
+        Pesquise filmes, descubra novas histórias e salve seus favoritos
+        em uma coleção pessoal.
+      </p>
+
+      <form class="search-box" id="searchForm">
+
+        <span class="search-icon" aria-hidden="true">⌕</span>
+
+        <input
+          type="search"
+          id="searchInput"
+          name="query"
+          placeholder="Digite o nome de um filme..."
+          autocomplete="off"
+          aria-label="Pesquisar filme"
+        >
+
+        <button type="submit">
+          Buscar
+        </button>
+
+      </form>
+
+      <div class="quick-actions" aria-label="Pesquisas rápidas">
+
+        <button
+          class="quick-search"
+          type="button"
+          data-query="Interestelar"
+        >
+          Interestelar
+        </button>
+
+        <button
+          class="quick-search"
+          type="button"
+          data-query="Matrix"
+        >
+          Matrix
+        </button>
+
+        <button
+          class="quick-search"
+          type="button"
+          data-query="Toy Story"
+        >
+          Toy Story
+        </button>
+
+        <button
+          class="quick-search"
+          type="button"
+          data-query="Homem-Aranha no Aranhaverso"
+        >
+          Aranhaverso
+        </button>
+
+        <button
+          class="quick-search"
+          type="button"
+          data-query="Divertida Mente"
+        >
+          Divertida Mente
+        </button>
+
+        <button
+          id="surpriseButton"
+          type="button"
+        >
+          ✦ Surpreenda-me
+        </button>
+
+      </div>
+
+    </section>
+
+    <section class="content-section">
+
+      <div class="section-heading">
+
+        <div>
+          <div class="section-kicker" id="sectionKicker">
+            DESTAQUES
+          </div>
+
+          <h2 id="sectionTitle">
+            Filmes em destaque
+          </h2>
+        </div>
+
+        <div
+          class="result-count"
+          id="resultCount"
+          aria-live="polite"
+        ></div>
+
+      </div>
+
+      <div
+        class="status-area"
+        id="statusArea"
+        aria-live="polite"
+      ></div>
+
+      <div
+        class="movie-grid"
+        id="results"
+      ></div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <span>STARLING</span>
+
+    <span>
+      Descubra histórias que ficam.
+    </span>
+
+    <span>
+      Dados de filmes fornecidos pelo TMDB.
+    </span>
+  </footer>
+
+
+  <!-- Modal de detalhes -->
+
+  <dialog id="detailsDialog">
+
+    <div class="dialog-card">
+
+      <button
+        class="close-button"
+        id="closeDialog"
+        type="button"
+        aria-label="Fechar detalhes"
+      >
+        ×
+      </button>
+
+      <div id="dialogContent"></div>
+
+    </div>
+
+  </dialog>
+
+
+  <!-- Modal de favoritos -->
+
+  <dialog id="favoritesDialog">
+
+    <div class="dialog-card favorites-card">
+
+      <button
+        class="close-button"
+        id="closeFavorites"
+        type="button"
+        aria-label="Fechar favoritos"
+      >
+        ×
+      </button>
+
+      <div class="section-kicker">
+        SUA COLEÇÃO
+      </div>
+
+      <h2 class="detail-title">
+        Filmes favoritos
+      </h2>
+
+      <div id="favoritesList"></div>
+
+    </div>
+
+  </dialog>
+
+
+  <!-- Configuração da API -->
+
+  <script>
+    window.STARLING_CONFIG = {
+  TMDB_TOKEN:
+    "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMDAzOTFmM2M5NDg3NzQ2NTJlN2UyMDA5Yjc2MTdhYyIsIm5iZiI6MTc4NjgzNTE2Ni4yMzYsInN1YiI6IjZhODBmMGRlM2ZjMTE1MTY0ZTYzYjY4YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zqfUtT5BrS6N9QKvMC8NmfZTOwTss1ByGuThLMlWwg0",
+};
+  </script>
+
+  <!-- JavaScript principal -->
+  <script src="app.js"></script>
+
+</body>
+</html>
