@@ -1,0 +1,694 @@
+# ✦ Starling — Film Discovery
+
+Uma interface moderna, elegante e responsiva para **descobrir, pesquisar e salvar filmes favoritos** diretamente pelo navegador.
+
+O **Starling — Film Discovery** utiliza a API do **The Movie Database (TMDB)** para pesquisar filmes e apresentar informações como título, ano de lançamento, avaliação, pôster e sinopse.
+
+Além da pesquisa, o projeto oferece uma experiência de descoberta com pesquisas rápidas, seleção aleatória de filmes e uma coleção pessoal de favoritos armazenada localmente no navegador.
+
+---
+
+## ✨ Funcionalidades
+
+* 🎬 Pesquisa de filmes através da API do TMDB
+* 🔎 Busca por título de filmes
+* ⚡ Exibição de até **12 resultados** por pesquisa
+* ⭐ Exibição da avaliação dos filmes
+* 📅 Exibição do ano de lançamento
+* 🖼️ Pôsteres dos filmes
+* 📖 Visualização de sinopse e detalhes
+* ❤️ Sistema de favoritos
+* 💾 Persistência dos favoritos utilizando `localStorage`
+* 🔢 Contador de filmes favoritos
+* 🎲 Botão **“Surpreenda-me”** para descobrir um filme aleatório
+* ⚡ Pesquisas rápidas por filmes pré-selecionados
+* 📴 Modo demonstração offline
+* ⚠️ Tratamento de erros da API
+* ❌ Mensagens para pesquisas sem resultados
+* 🛡️ Escape de HTML para conteúdo recebido da API
+* 📱 Layout responsivo para diferentes tamanhos de tela
+* ✨ Animações suaves nos cards
+* 🖥️ Interface construída sem frameworks JavaScript
+
+---
+
+## 🖥️ Interface
+
+O projeto possui uma interface focada em **descoberta de filmes**, combinando uma estética cinematográfica com uma experiência simples de pesquisa.
+
+### Cabeçalho
+
+O topo da aplicação apresenta:
+
+* Marca **STARLING**
+* Identidade **FILM DISCOVERY**
+* Ícone ✦ da marca
+* Botão para acessar os filmes favoritos
+* Contador com a quantidade de favoritos
+
+A estrutura da marca e do botão de favoritos está definida diretamente no HTML.
+
+### Área principal
+
+A seção principal apresenta a mensagem:
+
+> **Encontre seu próximo filme favorito.**
+
+Também existe uma descrição incentivando o usuário a pesquisar filmes, descobrir novas histórias e criar sua própria coleção.
+
+O campo de pesquisa permite inserir o nome de um filme e executar a consulta através do botão **Buscar**.
+
+### Pesquisas rápidas
+
+A interface disponibiliza alguns títulos como atalhos de pesquisa:
+
+* Interestelar
+* Matrix
+* Toy Story
+* Aranhaverso
+* Divertida Mente
+
+Também existe o botão:
+
+> ✦ Surpreenda-me
+
+que seleciona aleatoriamente um dos filmes disponíveis no conjunto de demonstração.
+
+---
+
+## 🎞️ Resultados
+
+Os filmes são apresentados em uma grade de cards.
+
+Cada card pode apresentar:
+
+* Pôster
+* Título
+* Ano
+* Tipo do conteúdo
+* Avaliação
+* Botão de favorito
+
+Os cards também possuem interação: clicar em um filme abre sua área de detalhes, enquanto o botão de coração permite adicioná-lo ou removê-lo dos favoritos.
+
+### Avaliação
+
+As avaliações recebidas do TMDB são formatadas para uma casa decimal antes de serem exibidas na interface.
+
+---
+
+## 📖 Detalhes do filme
+
+Ao selecionar um filme, o projeto abre uma janela de detalhes utilizando o elemento nativo:
+
+```html
+<dialog>
+```
+
+A janela apresenta:
+
+* Pôster
+* Título
+* Ano
+* Duração, quando disponível
+* Avaliação
+* Categoria
+* Sinopse
+* Estado do favorito
+
+Também é possível adicionar ou remover o filme dos favoritos diretamente nessa janela.
+
+---
+
+## ❤️ Sistema de favoritos
+
+O Starling possui uma coleção pessoal de filmes favoritos.
+
+O usuário pode favoritar um filme diretamente pelo card ou pela janela de detalhes.
+
+Os favoritos são armazenados no navegador utilizando:
+
+```text
+localStorage
+```
+
+A chave utilizada é:
+
+```text
+starling-favorites
+```
+
+Ao iniciar a aplicação, os favoritos previamente armazenados são carregados automaticamente.
+
+### Coleção
+
+O botão **♥ Favoritos** abre uma janela contendo todos os filmes salvos.
+
+Cada item apresenta:
+
+* Pôster
+* Título
+* Ano
+* Avaliação
+* Botão para remover dos favoritos
+
+Caso nenhuma obra tenha sido favoritada, a interface apresenta uma mensagem informando que a coleção ainda está vazia.
+
+---
+
+## 🎲 Surpreenda-me
+
+O botão **“Surpreenda-me”** oferece uma maneira rápida de descobrir um filme sem precisar escolher um título manualmente.
+
+A aplicação seleciona aleatoriamente um filme do conjunto de demonstração e automaticamente inicia uma pesquisa por seu título.
+
+Isso transforma a pesquisa em uma experiência mais exploratória, além da simples busca por títulos conhecidos.
+
+---
+
+## 🔌 API do TMDB
+
+O projeto utiliza a API do **The Movie Database (TMDB)** para realizar as pesquisas.
+
+A API utilizada é:
+
+```text
+https://api.themoviedb.org/3
+```
+
+A busca de filmes utiliza o endpoint:
+
+```text
+/search/movie
+```
+
+A consulta inclui parâmetros como:
+
+```text
+query
+language=pt-BR
+include_adult=false
+```
+
+A aplicação utiliza autenticação através do cabeçalho:
+
+```http
+Authorization: Bearer TOKEN
+```
+
+Os resultados são posteriormente transformados em objetos simplificados utilizados pela interface.
+
+### Dados utilizados
+
+Para cada filme retornado pela API, o projeto aproveita informações como:
+
+* ID
+* Título
+* Data de lançamento
+* Avaliação
+* Pôster
+* Sinopse
+
+Quando disponível, o caminho do pôster é combinado com a base:
+
+```text
+https://image.tmdb.org/t/p/w500
+```
+
+---
+
+## 🔄 Fluxo de pesquisa
+
+O funcionamento básico da aplicação é:
+
+```text
+Usuário digita o nome de um filme
+              ↓
+Formulário é enviado
+              ↓
+A aplicação consulta a API do TMDB
+              ↓
+TMDB retorna os filmes encontrados
+              ↓
+JavaScript transforma os dados
+              ↓
+Os cards são renderizados
+              ↓
+Usuário pode visualizar detalhes
+              ↓
+Usuário pode favoritar o filme
+```
+
+Durante a consulta, a interface informa que a biblioteca de filmes está sendo consultada.
+
+Caso a API esteja indisponível, o sistema pode utilizar o conjunto de filmes de demonstração disponível localmente.
+
+---
+
+## 📴 Modo demonstração offline
+
+O projeto possui um conjunto de filmes de demonstração armazenado diretamente no JavaScript.
+
+Entre os exemplos estão:
+
+* Interestelar
+* Matrix
+* Toy Story
+* Homem-Aranha no Aranhaverso
+* Divertida Mente
+
+Esses dados funcionam como conteúdo inicial da aplicação e também como fallback quando a API não está disponível.
+
+Quando uma pesquisa não consegue acessar a API, o projeto tenta encontrar correspondências nesse conjunto local.
+
+Caso encontre, a interface informa:
+
+```text
+API indisponível. Exibindo modo demonstração offline.
+```
+
+Isso permite que a aplicação continue apresentando conteúdo mesmo diante de uma falha temporária na API.
+
+---
+
+## ⚠️ Tratamento de erros
+
+A aplicação possui diferentes estados para lidar com problemas durante a utilização.
+
+### Pesquisa vazia
+
+O sistema ignora pesquisas sem conteúdo.
+
+```text
+Campo de pesquisa vazio
+        ↓
+Nenhuma requisição é realizada
+```
+
+### Nenhum resultado
+
+Quando nenhum filme é encontrado:
+
+```text
+Nenhum filme encontrado para “termo”.
+Tente outro título.
+```
+
+### API indisponível
+
+Quando ocorre uma falha na comunicação com o TMDB, a aplicação tenta utilizar o modo demonstração offline.
+
+Caso não exista uma correspondência local, é exibida uma mensagem informando que a API não está disponível.
+
+---
+
+## 🎨 Design
+
+O visual do Starling utiliza uma identidade cinematográfica baseada em:
+
+* Fundo escuro
+* Superfícies translúcidas
+* Gradientes
+* Roxo como cor de destaque
+* Azul como cor secundária
+* Dourado para avaliações
+* Bordas discretas
+* Cantos arredondados
+* Sombras suaves
+* Efeitos de desfoque
+* Animações de entrada
+
+As principais variáveis de identidade visual estão centralizadas no `:root` do CSS.
+
+### Cores principais
+
+```text
+Fundo:       #070b14
+Painel:      rgba(16, 23, 39, .78)
+Texto:       #f5f7ff
+Texto suave: #9aa5bd
+Destaque:    #8b5cf6
+Secundária:  #38bdf8
+Avaliação:   #fbbf24
+Erro:        #fb7185
+```
+
+A combinação de roxo e azul também aparece nos gradientes utilizados na identidade visual da marca e nos principais botões da aplicação.
+
+---
+
+## 🔤 Tipografia
+
+O projeto utiliza a fonte:
+
+* **Inter** — textos, títulos, botões e demais elementos da interface
+
+A fonte é carregada através do Google Fonts no documento HTML.
+
+---
+
+## ✨ Animações
+
+Os cards possuem uma animação de entrada baseada em:
+
+```css
+opacity
+transform: translateY(...)
+```
+
+A animação faz com que os resultados apareçam suavemente na interface.
+
+Os cards também possuem efeitos de interação ao passar o mouse:
+
+* Elevação do card
+* Alteração da borda
+* Sombra mais intensa
+
+## Em dispositivos que não possuem hover, esses efeitos são desativados para evitar comportamentos inadequados em telas sensíveis ao toque.
+
+## 📱 Responsividade
+
+O Starling foi desenvolvido para se adaptar a diferentes tamanhos de tela.
+
+O CSS possui breakpoints específicos para:
+
+```text
+900px
+680px
+430px
+360px
+```
+
+### Desktop
+
+Em telas maiores, a aplicação utiliza uma área centralizada com largura máxima aproximada de:
+
+```text
+1180px
+```
+
+A grade de filmes se adapta automaticamente ao espaço disponível.
+
+### Tablet
+
+Em telas menores:
+
+* O conteúdo recebe margens reduzidas
+* Os pôsteres ficam menores
+* A grade é adaptada
+* A janela de detalhes reduz suas dimensões
+
+### Celular
+
+Em telas de até `680px`:
+
+* A área de pesquisa passa para disposição vertical
+* O ícone de pesquisa é ocultado
+* O botão Buscar ocupa toda a largura
+* Os filmes são organizados em duas colunas
+* Os cards ficam mais compactos
+* A janela de detalhes passa para uma única coluna
+* O pôster dos detalhes é centralizado
+
+### Telas muito pequenas
+
+Em dispositivos de até `430px` e `360px`, tamanhos de textos, espaçamentos, botões e cards são reduzidos para preservar a usabilidade.
+
+---
+
+## 📁 Estrutura do projeto
+
+A estrutura principal é:
+
+```text
+starling-film-discovery/
+│
+├── index.html
+├── style.css
+├── app.js
+└── README.md
+```
+
+### `index.html`
+
+Responsável pela estrutura da aplicação:
+
+* Cabeçalho
+* Identidade visual
+* Botão de favoritos
+* Área principal
+* Campo de pesquisa
+* Pesquisas rápidas
+* Botão Surpreenda-me
+* Área de resultados
+* Rodapé
+* Janela de detalhes
+* Janela de favoritos
+* Configuração da API
+
+### `style.css`
+
+Responsável pela aparência da aplicação.
+
+Inclui:
+
+* Identidade visual
+* Layout
+* Cards
+* Grade de filmes
+* Botões
+* Pesquisa
+* Janelas de diálogo
+* Favoritos
+* Responsividade
+* Animações
+* Estados de erro
+* Efeitos de hover
+* Suporte a `prefers-reduced-motion`
+
+### `app.js`
+
+Responsável pela lógica da aplicação:
+
+* Pesquisa no TMDB
+* Processamento dos resultados
+* Renderização dos filmes
+* Sistema de favoritos
+* Persistência no `localStorage`
+* Detalhes dos filmes
+* Pesquisas rápidas
+* Surpreenda-me
+* Modo demonstração
+* Tratamento de erros
+* Validação
+* Escape de HTML
+
+---
+
+## 🔐 Segurança no frontend
+
+O projeto possui uma função para escapar caracteres HTML antes de inserir informações externas na interface:
+
+```javascript
+escapeHTML()
+```
+
+Essa função trata caracteres como:
+
+```text
+&
+<
+>
+"
+'
+```
+
+reduzindo o risco de inserir conteúdo HTML não intencional no DOM.
+
+### ⚠️ Token da API
+
+Como a aplicação é executada diretamente no navegador, a configuração atual utiliza o token do TMDB no frontend.
+
+Para um projeto publicado em produção, é recomendável **não manter credenciais sensíveis diretamente no código-fonte público**.
+
+Uma arquitetura mais segura seria:
+
+```text
+Navegador
+    ↓
+Backend / Proxy
+    ↓
+TMDB API
+```
+
+Dessa maneira, a credencial pode permanecer armazenada no ambiente do servidor.
+
+> **Importante:** não adicione ou publique tokens reais no README ou em repositórios públicos.
+
+---
+
+## 🧩 Tecnologias
+
+| Tecnologia               | Utilização                      |
+| ------------------------ | ------------------------------- |
+| HTML5                    | Estrutura da aplicação          |
+| CSS3                     | Design, layout e responsividade |
+| JavaScript               | Lógica e interação              |
+| Fetch API                | Comunicação com o TMDB          |
+| TMDB API                 | Pesquisa e dados dos filmes     |
+| LocalStorage             | Persistência dos favoritos      |
+| HTML Dialog              | Janelas de detalhes e favoritos |
+| Google Fonts             | Tipografia                      |
+| SVG / caracteres Unicode | Elementos visuais e ícones      |
+
+---
+
+## 🚀 Como executar
+
+O projeto não utiliza framework ou sistema de build.
+
+### 1. Clone ou baixe o projeto
+
+```bash
+git clone https://github.com/JH34567/Starling_Buscador_De_Filmes
+```
+
+### 2. Entre na pasta
+
+```bash
+cd Starling_Buscador_De_Filmes
+```
+
+### 3. Configure a API
+
+É necessário possuir uma credencial válida do TMDB para utilizar as pesquisas online.
+
+A configuração utilizada pela aplicação segue o formato:
+
+```javascript
+window.STARLING_CONFIG = {
+  TMDB_TOKEN: "SEU_TOKEN_AQUI"
+};
+```
+
+### 4. Execute o projeto
+
+Abra:
+
+```text
+index.html
+```
+
+em um navegador moderno.
+
+Durante o desenvolvimento, também é possível utilizar um servidor local, como o **Live Server**.
+
+---
+
+## 🌐 Compatibilidade
+
+O projeto utiliza recursos nativos da Web e APIs modernas do navegador.
+
+Principais recursos utilizados:
+
+* HTML5
+* CSS3
+* JavaScript moderno
+* Fetch API
+* LocalStorage
+* HTML Dialog
+* CSS Grid
+* CSS Flexbox
+* CSS Custom Properties
+
+Por não depender de frameworks JavaScript, a aplicação possui uma estrutura simples e fácil de estudar e modificar.
+
+---
+
+## ♿ Acessibilidade e experiência de uso
+
+O projeto possui alguns recursos voltados à experiência do usuário, incluindo:
+
+* `aria-label` em elementos interativos
+* Área de status com `aria-live`
+* Texto alternativo para pôsteres
+* Botões com elementos semânticos
+* Formulário de pesquisa
+* Suporte a teclado
+* Tratamento de `prefers-reduced-motion`
+
+## A interface também reduz ou remove determinadas animações quando o usuário possui preferência por menos movimento.
+
+## 📌 Possíveis melhorias
+
+Algumas funcionalidades podem ser adicionadas futuramente:
+
+* 🎭 Filtro por gênero
+* 📅 Filtro por ano
+* ⭐ Filtro por avaliação
+* 🎬 Busca por atores e diretores
+* 🏆 Listas de filmes populares
+* 🔥 Filmes em alta
+* 🆕 Próximos lançamentos
+* 📚 Paginação de resultados
+* 🖼️ Galeria de imagens e trailers
+* 🎞️ Informações sobre elenco
+* 🎥 Integração com trailers
+* 🕘 Histórico de pesquisas
+* 🔍 Sugestões enquanto o usuário digita
+* 🌎 Suporte a múltiplos idiomas
+* 👤 Perfil de usuário
+* ☁️ Sincronização da coleção na nuvem
+* 🔐 Backend para proteger a credencial da API
+* 📤 Compartilhamento de filmes
+* 📱 PWA para instalação em dispositivos
+
+---
+
+## 🎓 Objetivo do projeto
+
+O **Starling — Film Discovery** também pode funcionar como um projeto educacional para demonstrar conceitos importantes do desenvolvimento web.
+
+Entre eles:
+
+* Estruturação de páginas com HTML
+* Criação de interfaces com CSS
+* CSS Grid e Flexbox
+* Responsividade
+* JavaScript e manipulação do DOM
+* Eventos e formulários
+* Consumo de APIs REST
+* Tratamento de respostas JSON
+* Estados de carregamento e erro
+* Armazenamento com `localStorage`
+* Criação de componentes visuais com JavaScript
+* Uso de elementos nativos como `<dialog>`
+* Boas práticas de segurança no frontend
+
+---
+
+## 📄 Licença
+
+O **Starling — Film Discovery** é um projeto aberto e gratuito, desenvolvido principalmente com finalidade **educacional e experimental**.
+
+O código pode ser utilizado como base para estudos, modificações e experimentos de desenvolvimento web, respeitando as licenças e condições aplicáveis às tecnologias e serviços utilizados pelo projeto.
+
+---
+
+## 🎬 TMDB
+
+O Starling utiliza dados fornecidos pelo **The Movie Database (TMDB)** para realizar suas pesquisas e apresentar informações sobre filmes.
+
+O TMDB e seus dados estão sujeitos aos próprios termos de uso, políticas e condições de utilização.
+
+O projeto não é afiliado, endossado ou patrocinado pelo TMDB, salvo indicação expressa em contrário.
+
+---
+
+## ✦ Starling — Film Discovery
+
+> **Encontre seu próximo filme favorito.**
+
+Pesquise. Descubra. Salve.
+
+Uma experiência simples e elegante para explorar histórias que ficam.
